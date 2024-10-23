@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTSP Stream</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+    <h2>RTSP Stream</h2>
+    <label for="stream_switch">Enable Stream:</label>
+    <input type="checkbox" id="stream_switch" />
+
+    <br/>
+    <img id="video_feed" width="576" height="576" style="display: none;"/>
+
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var streamEnabled = false;
+
+        // Handle frame data
+        socket.on('frame', function(data) {
+            var image = document.getElementById('video_feed');
+            image.src = 'data:image/jpeg;base64,' + data.image;
+        });
+
+        // Handle stream toggle
+        document.getElementById('stream_switch').addEventListener('change', function() {
+            streamEnabled = this.checked;
+            var videoFeed = document.getElementById('video_feed');
+            if (streamEnabled) {
+                videoFeed.style.display = 'block';  // Show the video
+            } else {
+                videoFeed.style.display = 'none';  // Hide the video
+            }
+            socket.emit('toggle_stream', streamEnabled);  // Send stream status to the server
+        });
+    </script>
+</body>
+</html>

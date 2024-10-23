@@ -1,0 +1,13 @@
+pip install torch torchvision torchaudio
+pip install git+https://github.com/ultralytics/yolov5
+pip install ultralytics
+pip install eventlet flask flask-socketio paho-mqtt
+wyslanie do repozytorium
+docker tag cardetectpyv312:mobileNetSSDV1.0 mirsmokch/mirsmok_repo:mobileNetSSDv1.0
+docker login
+docker push mirsmokch/mirsmok_repo:mobileNetSSDv1.0
+utworzenie multiarchitecturels
+docker buildx create --name multarchbuilder
+docker buildx use multarchbuilder
+docker buildx ls
+docker buildx build -t mirsmokch/mirsmok_repo:mobileNetSSDV1.2 --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --push .
